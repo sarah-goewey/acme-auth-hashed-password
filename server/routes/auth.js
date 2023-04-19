@@ -18,7 +18,7 @@ app.post('/', async(req, res, next)=> {
       res.status(401).send({ error: 'not authorized' });
     }
     else {
-      res.send({ token: jwt.sign({ id: user.id }, process.env.JWT) });
+      res.send(user.generateToken());
     }
   }
   catch(ex){
@@ -30,7 +30,7 @@ app.post('/register', async(req, res, next)=> {
   try{
     const { username, password } = req.body;
     const user = await User.create({ username, password });
-    res.send({ token: jwt.sign({ id: user.id }, process.env.JWT) });
+    res.send(user.generateToken());
   }
   catch(ex){
     next(ex);

@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
 const { STRING, BOOLEAN } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/acme_products_search_db');
+const jwt = require('jsonwebtoken');
 
 const Product = conn.define('product', {
   name: {
@@ -22,6 +23,12 @@ const User = conn.define('user', {
     type: STRING
   },
 });
+
+User.prototype.generateToken = function(){
+  return {
+    token: jwt.sign({ id: this.id }, process.env.JWT) 
+  };
+}
 
 module.exports = {
   Product,
