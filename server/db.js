@@ -35,6 +35,22 @@ User.register = async function(credentials){
   return user.generateToken();
 }
 
+User.authenticate = async function(credentials){
+  const { username, password } = credentials;
+  const user = await this.findOne({
+    where: {
+      username,
+      password
+    }
+  });
+  if(!user){
+    const error = Error('bad credentials');
+    error.status = 401;
+    throw error;
+  }
+  return user.generateToken();
+}
+
 module.exports = {
   Product,
   User,
