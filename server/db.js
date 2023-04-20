@@ -35,6 +35,17 @@ User.register = async function(credentials){
   return user.generateToken();
 }
 
+User.findByToken = async function(token){
+  const { id } = jwt.verify(token, process.env.JWT);
+  const user = await this.findByPk(id);
+  if(!user){
+    const error = Error('bad token!');
+    error.status = 401;
+    throw error;
+  }
+  return user;
+}
+
 User.authenticate = async function(credentials){
   const { username, password } = credentials;
   const user = await this.findOne({
