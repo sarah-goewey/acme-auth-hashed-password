@@ -1,7 +1,8 @@
 const Sequelize = require('sequelize');
-const { STRING, BOOLEAN } = Sequelize;
+const { STRING, BOOLEAN, INTEGER } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/acme_products_search_db');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
 const Product = conn.define('product', {
   name: {
@@ -22,6 +23,15 @@ const User = conn.define('user', {
   password: {
     type: STRING
   },
+  luckyNumber: {
+    type: INTEGER,
+    allowNull: false,
+    defaultValue: 7
+  },
+});
+
+User.addHook('beforeSave', async(user)=> {
+  user.password = await bcrypt.hash(user.password, 5);
 });
 
 User.prototype.generateToken = function(){
@@ -50,11 +60,10 @@ User.authenticate = async function(credentials){
   const { username, password } = credentials;
   const user = await this.findOne({
     where: {
-      username,
-      password
+      username
     }
   });
-  if(!user){
+  if(!user || !(await bcrypt.compare(password, user.password))){
     const error = Error('bad credentials');
     error.status = 401;
     throw error;
