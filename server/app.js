@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const { Product, User } = require('./db');
+const { Product, User, Note } = require('./db');
 const jwt = require('jsonwebtoken');
 
 const app = express()
@@ -22,6 +22,15 @@ app.get('/api/products', async(req, res, next)=> {
     next(ex);
   }
 });
+
+app.get('/api/notes', async(req, res, next)=> {
+  try {
+    res.send(await Note.findAll())
+  }
+  catch(ex) {
+    next(ex)
+  }
+})
 
 app.use('/api/auth', require('./routes/auth'));
 

@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const { STRING, BOOLEAN, INTEGER } = Sequelize;
+const { STRING, BOOLEAN, INTEGER, TEXT } = Sequelize;
 const conn = new Sequelize(process.env.DATABASE_URL || 'postgres://localhost/acme_products_search_db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -29,6 +29,18 @@ const User = conn.define('user', {
     defaultValue: 7
   },
 });
+
+const Note = conn.define('note', {
+  title: {
+    type: STRING
+  },
+  content: {
+    type: TEXT
+  }
+})
+
+Note.belongsTo(User)
+User.hasMany(Note)
 
 User.addHook('beforeSave', async(user)=> {
   if(user.changed('password')){
@@ -76,5 +88,6 @@ User.authenticate = async function(credentials){
 module.exports = {
   Product,
   User,
+  Note,
   conn
 };

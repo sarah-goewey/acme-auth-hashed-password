@@ -17,11 +17,24 @@ const auth = (state = {}, action)=> {
   return state;
 };
 
+const notes = (state = [], action)=> {
+  if (action.type === 'SET_NOTES') {
+    return action.notes
+  }
+  return state
+}
+
 export const fetchProducts = ()=> {
   return async(dispatch)=> {
     return dispatch({ type: 'SET_PRODUCTS', products: (await axios.get('/api/products')).data});
   };
 };
+
+export const fetchNotes = ()=> {
+  return async(dispatch)=> {
+    return dispatch({type: 'SET_NOTES', notes: (await axios.get(`/api/notes`))}) 
+  }
+}
 
 export const loginWithToken = ()=> {
   return async(dispatch)=> {
@@ -70,7 +83,8 @@ export const register = (credentials)=> {
 
 const reducer = combineReducers({
   products,
-  auth
+  auth,
+  notes
 });
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
