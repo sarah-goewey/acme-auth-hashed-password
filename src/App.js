@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { loginWithToken, fetchProducts, fetchNotes, logout } from './store';
+import { loginWithToken, fetchProducts, logout } from './store';
 import { Link, Routes, Route } from 'react-router-dom';
 import Products from './Products';
 import Login from './Login';
@@ -13,7 +13,6 @@ const App = ()=> {
   useEffect(()=> {
     dispatch(fetchProducts());
     dispatch(loginWithToken());
-    dispatch(fetchNotes());
   }, []);
 
   return (

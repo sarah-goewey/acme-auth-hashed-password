@@ -23,9 +23,13 @@ app.get('/api/products', async(req, res, next)=> {
   }
 });
 
-app.get('/api/notes', async(req, res, next)=> {
+app.get('/api/notes/:id', async(req, res, next)=> {
   try {
-    res.send(await Note.findAll())
+    res.send(await Note.findAll({
+      where: {
+        userId: req.params.id
+      }
+    }))
   }
   catch(ex) {
     next(ex)

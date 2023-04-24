@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateAuth } from './store';
+import { updateAuth, fetchNotes } from './store';
 
 const Profile = () => {
   const [luckyNumber, setLuckyNumber] = useState(7);
   const { auth, notes } = useSelector(state => state);
   const dispatch = useDispatch();
   
-  const userNotes = notes.data.filter(note => note.userId === auth.id)
-
+  useEffect(()=> {
+    dispatch(fetchNotes(auth));
+  }, [])
+  
   useEffect(()=> {
     if(auth.id){
       setLuckyNumber(auth.luckyNumber);
@@ -20,6 +22,9 @@ const Profile = () => {
     dispatch(updateAuth({ luckyNumber }));
   };
 
+  console.log(notes.data)
+  const userNotes = notes.data.filter((note) => {note.userId === auth.id})
+
   if (!userNotes) {
     return null
   }
@@ -28,7 +33,7 @@ const Profile = () => {
     <div>
       <ul>
         {
-          userNotes.length && userNotes.map(note => {
+          userNotes.map(note => {
             return (
               <li key= {note.id}>
                 {note.title} : {note.content}
