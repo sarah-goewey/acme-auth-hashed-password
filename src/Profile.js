@@ -7,8 +7,10 @@ const Profile = () => {
   const { auth, notes } = useSelector(state => state);
   const dispatch = useDispatch();
   
+  console.log(auth.id)
+
   useEffect(()=> {
-    dispatch(fetchNotes(auth));
+    dispatch(fetchNotes(auth.id));
   }, [])
   
   useEffect(()=> {

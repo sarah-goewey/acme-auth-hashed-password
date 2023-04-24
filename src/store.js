@@ -30,9 +30,9 @@ export const fetchProducts = ()=> {
   };
 };
 
-export const fetchNotes = (auth)=> {
+export const fetchNotes = (authId)=> {
   return async(dispatch)=> {
-    return dispatch({type: 'SET_NOTES', notes: (await axios.get(`/api/notes/${auth.id}`))}) 
+    return dispatch({type: 'SET_NOTES', notes: (await axios.get(`/api/notes/${authId}`))}) 
   }
 }
 
