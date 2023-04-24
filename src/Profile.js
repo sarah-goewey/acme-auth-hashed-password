@@ -7,15 +7,10 @@ const Profile = () => {
   const { auth, notes } = useSelector(state => state);
   const dispatch = useDispatch();
   
-  console.log(auth.id)
-
-  useEffect(()=> {
-    dispatch(fetchNotes(auth.id));
-  }, [])
-  
   useEffect(()=> {
     if(auth.id){
       setLuckyNumber(auth.luckyNumber);
+      dispatch(fetchNotes(auth.id));
     }
   }, [auth]);
 
@@ -24,12 +19,7 @@ const Profile = () => {
     dispatch(updateAuth({ luckyNumber }));
   };
 
-  console.log(notes.data)
-  const userNotes = notes.data.filter((note) => {note.userId === auth.id})
-
-  if (!userNotes) {
-    return null
-  }
+  const userNotes = notes.data?.filter(note => note.userId === auth.id) || []
 
   return (
     <div>
